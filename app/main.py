@@ -58,7 +58,7 @@ async def get_pool() -> asyncpg.Pool:
     return await get_db_connection()
 
 
-@app.get("/health", status_code=status.HTTP_200_OK)
+@app.get("/health", status_code=status.HTTP_200_OK, dependencies=[Depends(verify_api_key)])
 async def health(
     settings: Settings = Depends(get_settings), pool: asyncpg.Pool = Depends(get_pool)
 ):
@@ -78,7 +78,7 @@ async def health(
         )
 
 
-@app.get("/", status_code=status.HTTP_200_OK)
+@app.get("/", status_code=status.HTTP_200_OK, dependencies=[Depends(verify_api_key)])
 def index():
     return {
         "message": "Application API",
